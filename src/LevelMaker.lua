@@ -23,6 +23,11 @@ function LevelMaker.generate(width, height)
     local tileset = math.random(20)
     local topperset = math.random(20)
 
+    local keyset = math.random(4)
+
+    local keySpawned = false;
+    local lockSpawned = false;
+
     -- insert blank tables into tiles for later access
     for x = 1, height do
         table.insert(tiles, {})
@@ -95,22 +100,48 @@ function LevelMaker.generate(width, height)
                         collidable = false
                     }
                 )
+
+            elseif math.random(8) == 1 and keySpawned == false then
+                table.insert(objects,
+                    GameObject {
+                        texture = 'keys-and-locks',
+                        x = (x - 1) * TILE_SIZE,
+                        y = (6 - 1) * TILE_SIZE,
+                        width = 16,
+                        height = 16,
+                        frame = keyset,
+                        collidable = false
+                    })
+                keySpawned = true
             end
 
             -- chance to spawn a block
             if math.random(10) == 1 then
+                local lockBlock = false
+                -- can't use conditionals in object initialization so declaring texture and frame here
+                local t
+                local f
+                if math.random(10) == 1 and lockSpawned == false then
+                    lockBlock = true
+                    lockSpawned = true
+                    t = 'keys-and-locks'
+                    f = keyset + 4
+                else
+                    lockBlock = false
+                    t = 'jump-blocks'
+                    f = math.random(#JUMP_BLOCKS)
+                end
                 table.insert(objects,
 
                     -- jump block
                     GameObject {
-                        texture = 'jump-blocks',
+                        texture = t,
                         x = (x - 1) * TILE_SIZE,
                         y = (blockHeight - 1) * TILE_SIZE,
                         width = 16,
                         height = 16,
 
-                        -- make it a random variant
-                        frame = math.random(#JUMP_BLOCKS),
+                        frame = f,
                         collidable = true,
                         hit = false,
                         solid = true,

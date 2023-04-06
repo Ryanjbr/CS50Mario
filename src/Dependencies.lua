@@ -70,6 +70,7 @@ gTextures = {
     ['toppers'] = love.graphics.newImage('graphics/tile_tops.png'),
     ['bushes'] = love.graphics.newImage('graphics/bushes_and_cacti.png'),
     ['jump-blocks'] = love.graphics.newImage('graphics/jump_blocks.png'),
+    ['keys-and-locks'] = love.graphics.newImage('graphics/keys_and_locks.png'),
     ['gems'] = love.graphics.newImage('graphics/gems.png'),
     ['backgrounds'] = love.graphics.newImage('graphics/backgrounds.png'),
     ['green-alien'] = love.graphics.newImage('graphics/green_alien.png'),
@@ -82,6 +83,7 @@ gFrames = {
     ['toppers'] = GenerateQuads(gTextures['toppers'], TILE_SIZE, TILE_SIZE),
     
     ['bushes'] = GenerateQuads(gTextures['bushes'], 16, 16),
+    ['keys-and-locks'] = GenerateQuads(gTextures['keys-and-locks'], 16, 16),
     ['jump-blocks'] = GenerateQuads(gTextures['jump-blocks'], 16, 16),
     ['gems'] = GenerateQuads(gTextures['gems'], 16, 16),
     ['backgrounds'] = GenerateQuads(gTextures['backgrounds'], 256, 128),

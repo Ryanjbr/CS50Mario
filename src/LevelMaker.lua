@@ -63,7 +63,8 @@ function LevelMaker.generate(width, height)
             end
 
             -- chance to generate a pillar
-            if math.random(8) == 1 then
+            -- don't spawn any pillars at last column to make room for flag
+            if math.random(8) == 1 and x ~= width then
                 blockHeight = 2
                 
                 -- chance to generate bush on pillar
@@ -104,7 +105,8 @@ function LevelMaker.generate(width, height)
                     }
                 )
 
-            elseif math.random(8) == 1 and keySpawned == false then
+                -- makes sure lock block spawns at least halfway through the level
+            elseif math.random(24) == 1 and keySpawned == false or x > width - (width / 4) and keySpawned == false then
                 table.insert(objects,
                     GameObject {
                         texture = 'keys-and-locks',
@@ -129,8 +131,8 @@ function LevelMaker.generate(width, height)
                 -- can't use conditionals in object initialization so declaring texture and frame here
                 local t
                 local f
-                if math.random(10) == 1 and lockSpawned == false then
-                    print('hello')
+                if math.random(10) == 1 and lockSpawned == false or x > width / 2 and lockSpawned == false then
+                    print('lock spawn')
                     lockBlock = true
                     lockSpawned = true
                     t = 'keys-and-locks'
@@ -198,6 +200,25 @@ function LevelMaker.generate(width, height)
 
                             if obj.locked and hasKey then
                                 -- spawn flag at end of level
+                                local flagLocation = width - 1
+                                table.insert(objects,
+                                    GameObject {
+                                        x = flagLocation * TILE_SIZE,
+                                        y = 3 * TILE_SIZE,
+                                        texture = 'poles',
+                                        width = 16,
+                                        height = 48,
+                                        frame = POLES[math.random(#POLES)],
+                                        solid = false,
+                                        consumable = true,
+                                        onConsume = function(player, obj)
+                                            gStateMachine:change('play', {
+                                                score = player.score,
+                                                width = width + 25
+                                            })
+                                        end
+                                    }
+                                )
                                 for k,v in pairs(objects) do
                                     if v == obj then
                                         table.remove(objects, k)

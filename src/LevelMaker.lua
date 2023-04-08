@@ -27,6 +27,7 @@ function LevelMaker.generate(width, height)
 
     local keySpawned = false;
     local lockSpawned = false;
+    local hasKey = false
 
     -- insert blank tables into tiles for later access
     for x = 1, height do
@@ -115,12 +116,8 @@ function LevelMaker.generate(width, height)
                         collidable = false,
                         consumable = true,
 
-                        onConsume = function(obj) 
-                            for i, object in pairs(objects) do
-                                if object.locked then
-                                    table.remove(objects, i)
-                                end
-                            end
+                        onConsume = function(player, obj) 
+                            hasKey = true
                         end
                     })
                 keySpawned = true
@@ -163,7 +160,7 @@ function LevelMaker.generate(width, height)
                         onCollide = function(obj)
 
                             -- spawn a gem if we haven't already hit the block
-                            if not obj.hit then
+                            if not obj.hit and not obj.locked then
 
                                 -- chance to spawn gem, not guaranteed
                                 if math.random(5) == 1 then
@@ -199,8 +196,18 @@ function LevelMaker.generate(width, height)
                                 obj.hit = true
                             end
 
+                            if obj.locked and hasKey then
+                                -- spawn flag at end of level
+                                for k,v in pairs(objects) do
+                                    if v == obj then
+                                        table.remove(objects, k)
+                                    end
+                                end
+                            end
+
                             gSounds['empty-block']:play()
                         end
+
                     }
                 )
             end

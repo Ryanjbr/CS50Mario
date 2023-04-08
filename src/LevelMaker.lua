@@ -77,7 +77,8 @@ function LevelMaker.generate(width, height)
                             
                             -- select random frame from bush_ids whitelist, then random row for variance
                             frame = BUSH_IDS[math.random(#BUSH_IDS)] + (math.random(4) - 1) * 7,
-                            collidable = false
+                            collidable = false,
+                            locked = false
                         }
                     )
                 end
@@ -97,7 +98,8 @@ function LevelMaker.generate(width, height)
                         width = 16,
                         height = 16,
                         frame = BUSH_IDS[math.random(#BUSH_IDS)] + (math.random(4) - 1) * 7,
-                        collidable = false
+                        collidable = false,
+                        locked = false
                     }
                 )
 
@@ -110,7 +112,16 @@ function LevelMaker.generate(width, height)
                         width = 16,
                         height = 16,
                         frame = keyset,
-                        collidable = false
+                        collidable = false,
+                        consumable = true,
+
+                        onConsume = function(obj) 
+                            for i, object in pairs(objects) do
+                                if object.locked then
+                                    table.remove(objects, i)
+                                end
+                            end
+                        end
                     })
                 keySpawned = true
             end
@@ -122,6 +133,7 @@ function LevelMaker.generate(width, height)
                 local t
                 local f
                 if math.random(10) == 1 and lockSpawned == false then
+                    print('hello')
                     lockBlock = true
                     lockSpawned = true
                     t = 'keys-and-locks'
@@ -140,6 +152,7 @@ function LevelMaker.generate(width, height)
                         y = (blockHeight - 1) * TILE_SIZE,
                         width = 16,
                         height = 16,
+                        locked = lockBlock,
 
                         frame = f,
                         collidable = true,

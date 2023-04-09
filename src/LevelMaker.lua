@@ -46,7 +46,7 @@ function LevelMaker.generate(width, height)
 
         -- chance to just be emptiness
         -- add x > 1 to ensure that emptiness never spawns at 1 (which is where player spawns)
-        if math.random(7) == 1 and x > 1 then
+        if math.random(7) == 1 and x > 1 and x < width then
             for y = 7, height do
                 table.insert(tiles[y],
                     Tile(x, y, tileID, nil, tileset, topperset))
@@ -219,11 +219,28 @@ function LevelMaker.generate(width, height)
                                         end
                                     }
                                 )
-                                for k,v in pairs(objects) do
-                                    if v == obj then
-                                        table.remove(objects, k)
-                                    end
+                                for i=1,2 do
+                                    print('hello' .. i)
+                                    table.insert(objects,
+                                        GameObject {
+                                            x = flagLocation * TILE_SIZE + 8,
+                                            y = (6 - i) * TILE_SIZE,
+                                            sf = -1,
+                                            width = 16,
+                                            height = 16, 
+                                            texture = 'flags',
+                                            frame = FLAGS[math.random(#FLAGS)],
+                                            solid = false,
+                                            consumable = false,
+                                            collidable = false
+                                        }
+                                    )
                                 end
+                                    for k,v in pairs(objects) do
+                                        if v == obj then
+                                            table.remove(objects, k)
+                                        end
+                                    end
                             end
 
                             gSounds['empty-block']:play()

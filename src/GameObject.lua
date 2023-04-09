@@ -11,6 +11,7 @@ GameObject = Class{}
 function GameObject:init(def)
     self.x = def.x
     self.y = def.y
+    self.sf = def.sf == nil and 1 or def.sf
     self.texture = def.texture
     self.width = def.width
     self.height = def.height
@@ -34,5 +35,5 @@ function GameObject:update(dt)
 end
 
 function GameObject:render()
-    love.graphics.draw(gTextures[self.texture], gFrames[self.texture][self.frame], self.x, self.y)
+    love.graphics.draw(gTextures[self.texture], gFrames[self.texture][self.frame], self.x, self.y, 0, self.sf)
 end
